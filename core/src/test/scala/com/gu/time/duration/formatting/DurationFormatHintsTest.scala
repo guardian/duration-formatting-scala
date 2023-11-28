@@ -1,6 +1,5 @@
 package com.gu.time.duration.formatting
 
-import com.gu.time.duration.formatting.DurationFormatHints.AllUsefulUnits
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

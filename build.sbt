@@ -1,10 +1,6 @@
 import ReleaseTransformations.*
 
-ThisBuild / scalaVersion := "2.13.12"
-ThisBuild / crossScalaVersions := Seq(
-  scalaVersion.value,
-  "3.3.1"
-)
+ThisBuild / scalaVersion := "3.3.1"
 ThisBuild / scalacOptions := Seq("-deprecation", "-release","11")
 ThisBuild / licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
 
@@ -32,7 +28,7 @@ lazy val `duration-formatting-root` = (project in file("."))
     `spire-intervals`
   ).settings(baseSettings).settings(
     publish / skip := true,
-    releaseCrossBuild := true, // true if you cross-build the project for multiple Scala versions
+    releaseCrossBuild := false, // true if you cross-build the project for multiple Scala versions
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
       inquireVersions,
@@ -41,8 +37,8 @@ lazy val `duration-formatting-root` = (project in file("."))
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
-      // For non cross-build projects, use releaseStepCommand("publishSigned")
-      releaseStepCommandAndRemaining("+publishSigned"),
+      // For cross-build projects, use releaseStepCommand("+publishSigned")
+      releaseStepCommandAndRemaining("publishSigned"),
       releaseStepCommand("sonatypeBundleRelease"),
       setNextVersion,
       commitNextVersion,
