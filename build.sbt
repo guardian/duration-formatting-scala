@@ -1,17 +1,19 @@
 import ReleaseTransformations.*
+import sbtversionpolicy.withsbtrelease.ReleaseVersion
 
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / crossScalaVersions := Seq(
   scalaVersion.value,
-  "3.3.1"
+  "3.3.6"
 )
 ThisBuild / scalacOptions := Seq("-deprecation", "-release","11")
-ThisBuild / licenses := Seq("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0"))
+ThisBuild / licenses := Seq(License.Apache2)
 
 
 lazy val baseSettings = Seq(
+  organization := "com.gu.duration-formatting",
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.2.17" % Test
+    "org.scalatest" %% "scalatest" % "3.2.19" % Test
   ),
   Test / testOptions +=
     Tests.Argument(TestFrameworks.ScalaTest, "-u", s"test-results/scala-${scalaVersion.value}", "-o")
@@ -32,6 +34,7 @@ lazy val `duration-formatting-root` = (project in file("."))
     `spire-intervals`
   ).settings(baseSettings).settings(
     publish / skip := true,
+    // releaseVersion := ReleaseVersion.fromAggregatedAssessedCompatibilityWithLatestRelease().value,
     releaseCrossBuild := true, // true if you cross-build the project for multiple Scala versions
     releaseProcess := Seq[ReleaseStep](
       checkSnapshotDependencies,
@@ -41,11 +44,7 @@ lazy val `duration-formatting-root` = (project in file("."))
       setReleaseVersion,
       commitReleaseVersion,
       tagRelease,
-      // For non cross-build projects, use releaseStepCommand("publishSigned")
-      releaseStepCommandAndRemaining("+publishSigned"),
-      releaseStepCommand("sonatypeBundleRelease"),
       setNextVersion,
-      commitNextVersion,
-      pushChanges
+      commitNextVersion
     )
   )
