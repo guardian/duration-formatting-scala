@@ -7,6 +7,8 @@ import scala.collection.immutable.{SortedMap, SortedSet}
 
 object DurationFormatHints {
   val UnitSymbols: SortedMap[ChronoUnit, String] = SortedMap(
+    NANOS -> "ns",
+    MICROS -> "μs",
     MILLIS -> "ms",
     SECONDS -> "s",
     MINUTES -> "m",
