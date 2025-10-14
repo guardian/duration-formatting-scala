@@ -1,15 +1,12 @@
 package com.gu.time.duration
 
-import com.gu.time.duration.formatting.DurationFormatHints.AllUsefulUnits
+import com.gu.time.duration.formatting.DurationFormatHints.{AllUsefulUnits, UnitSymbols}
 
-import java.time.Duration.{ZERO, ofDays, ofMinutes}
-import java.time.ZoneOffset.UTC
+import java.time.Duration
 import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.SECONDS
-import java.time.{Duration, Instant, LocalDate}
 import scala.math.Ordering.Implicits._
 import scala.math.{ceil, log10}
-
 
 package object formatting {
 
@@ -50,7 +47,7 @@ package object formatting {
     /**
      * Assuming that two durations can be accurately represented with the same single unit (allowing us to display
      * "15–20m" or "50–60s" to concisely denote a range of duration), we can identify that unit by working out what
-     * sensible units are for each duration, and taking the the intersection of those two sets.
+     * sensible units are for each duration, and taking the intersection of those two sets.
      *
      * This field works out what possible different units might desirably & accurately denote the duration, if it
      * *can* be denoted by a single unit.
@@ -66,23 +63,12 @@ package object formatting {
     }
 
     def isPreciseWith(unit: ChronoUnit): Boolean = duration.truncatedTo(unit) == duration
-
-
-    val truncateToConcise: Duration = largestNonZeroUnit.fold(ZERO) { unit =>
-      val durationBenefitsFromSecondaryUnit = duration >= ofMinutes(1) && duration < ofDays(10)
-      duration.truncatedTo(if (durationBenefitsFromSecondaryUnit) unit.smallerOrSameIfNoSmaller else unit)
-    }
-  }
-
-  implicit class RichInstant(instant: Instant) {
-    lazy val utcLocalDate: LocalDate = instant.atZone(UTC).toLocalDate
-    lazy val utcEpochDay: Long = utcLocalDate.toEpochDay
   }
 
   implicit class RichChronoUnit(chronoUnit: ChronoUnit) {
-    val symbol: String = DurationFormatHints.UnitSymbols.getOrElse(chronoUnit, nameSingular)
     val namePlural: String = chronoUnit.name.toLowerCase
     val nameSingular: String = namePlural.stripSuffix("s")
+    val symbol: String = UnitSymbols.getOrElse(chronoUnit, nameSingular)
 
     val smallerUnit: Option[ChronoUnit] = AllUsefulUnits.maxBefore(chronoUnit)
     val biggerUnit: Option[ChronoUnit] = AllUsefulUnits.minAfter(chronoUnit)
@@ -91,7 +77,6 @@ package object formatting {
     val padDigits: Int =
       biggerUnit.map(bu => ceil(log10(bu.getDuration.dividedBy(chronoUnit.getDuration).toDouble)).toInt).getOrElse(1)
 
-    // new DecimalFormat("00").format(l)
     def pad(amount: Long): String = s"%02d".format(amount)
   }
 }

@@ -35,19 +35,4 @@ class DurationFormatHintsTest extends AnyFlatSpec with Matchers {
     )
   }
 
-  it should "truncate to a concise representation" in {
-    ofMillis(78).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(78, MILLIS))
-    ofMillis(1000).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, SECONDS))
-    ofMillis(1001).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, SECONDS))
-    ofMillis(1999).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, SECONDS))
-    ofMillis(2000).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(2, SECONDS))
-    ofSeconds(59).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(59, SECONDS))
-    ofSeconds(60).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, MINUTES))
-    ofSeconds(61).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, MINUTES), UnitAmount(1, SECONDS))
-    ofSeconds(119).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, MINUTES), UnitAmount(59, SECONDS))
-    ofHours(24).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, DAYS))
-    ofHours(25).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(1, DAYS), UnitAmount(1, HOURS))
-    ofHours(51).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(2, DAYS), UnitAmount(3, HOURS))
-    ofHours(241).truncateToConcise.toUnitAmounts shouldBe Seq(UnitAmount(10, DAYS))
-  }
 }
