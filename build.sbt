@@ -13,7 +13,7 @@ ThisBuild / licenses := Seq(License.Apache2)
 lazy val baseSettings = Seq(
   organization := "com.gu.duration-formatting",
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.2.19" % Test
+    "org.scalatest" %% "scalatest" % "3.2.20" % Test
   ),
   Test / testOptions +=
     Tests.Argument(TestFrameworks.ScalaTest, "-u", s"test-results/scala-${scalaVersion.value}", "-o")
